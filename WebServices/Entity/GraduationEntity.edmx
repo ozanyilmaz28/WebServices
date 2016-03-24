@@ -1,0 +1,309 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="GRADUATIONModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl">
+        <EntityType Name="ADVERT">
+          <Key>
+            <PropertyRef Name="ADVT_ID" />
+          </Key>
+          <Property Name="ADVT_ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ADVT_DESCRIPTION" Type="nvarchar" MaxLength="500" />
+          <Property Name="ADVT_USERID" Type="bigint" />
+          <Property Name="ADVT_ADVERTDATETIME" Type="datetime" />
+          <Property Name="ADVT_ADVERTMAINTYPEID" Type="bigint" />
+          <Property Name="ADVT_ADVERTSUBTYPEID" Type="bigint" />
+          <Property Name="ADVT_ISOPEN" Type="bit" />
+        </EntityType>
+        <EntityType Name="ADVERTMAINTYPE">
+          <Key>
+            <PropertyRef Name="ADTT_ID" />
+          </Key>
+          <Property Name="ADTT_ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ADTT_CODE" Type="nvarchar" MaxLength="50" />
+          <Property Name="ADTT_DESCRIPTION" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="ADVERTSUBTYPE">
+          <Key>
+            <PropertyRef Name="ABST_ID" />
+          </Key>
+          <Property Name="ABST_ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ABST_CODE" Type="nvarchar" MaxLength="50" />
+          <Property Name="ABST_DESCRIPTION" Type="nvarchar" MaxLength="50" />
+          <Property Name="ABST_ADVERTMAINTYPEID" Type="bigint" />
+        </EntityType>
+        <EntityType Name="APPUSER">
+          <Key>
+            <PropertyRef Name="USER_ID" />
+          </Key>
+          <Property Name="USER_ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="USER_CODE" Type="nvarchar" MaxLength="50" />
+          <Property Name="USER_PASSWORD" Type="nvarchar" MaxLength="50" />
+          <Property Name="USER_NAMESURNAME" Type="nvarchar" MaxLength="50" />
+          <Property Name="USER_EMAIL" Type="nvarchar" MaxLength="50" />
+          <Property Name="USER_PHONE" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_ABST_ADVERTMAINTYPE">
+          <End Role="ADVERTMAINTYPE" Type="Self.ADVERTMAINTYPE" Multiplicity="0..1" />
+          <End Role="ADVERTSUBTYPE" Type="Self.ADVERTSUBTYPE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ADVERTMAINTYPE">
+              <PropertyRef Name="ADTT_ID" />
+            </Principal>
+            <Dependent Role="ADVERTSUBTYPE">
+              <PropertyRef Name="ABST_ADVERTMAINTYPEID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ADVT_ADVERTMAINTYPE">
+          <End Role="ADVERTMAINTYPE" Type="Self.ADVERTMAINTYPE" Multiplicity="0..1" />
+          <End Role="ADVERT" Type="Self.ADVERT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ADVERTMAINTYPE">
+              <PropertyRef Name="ADTT_ID" />
+            </Principal>
+            <Dependent Role="ADVERT">
+              <PropertyRef Name="ADVT_ADVERTMAINTYPEID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ADVT_ADVERTSUBTYPE">
+          <End Role="ADVERTSUBTYPE" Type="Self.ADVERTSUBTYPE" Multiplicity="0..1" />
+          <End Role="ADVERT" Type="Self.ADVERT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ADVERTSUBTYPE">
+              <PropertyRef Name="ABST_ID" />
+            </Principal>
+            <Dependent Role="ADVERT">
+              <PropertyRef Name="ADVT_ADVERTSUBTYPEID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ADVT_USER">
+          <End Role="APPUSER" Type="Self.APPUSER" Multiplicity="0..1" />
+          <End Role="ADVERT" Type="Self.ADVERT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="APPUSER">
+              <PropertyRef Name="USER_ID" />
+            </Principal>
+            <Dependent Role="ADVERT">
+              <PropertyRef Name="ADVT_USERID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GRADUATIONModelStoreContainer">
+          <EntitySet Name="ADVERT" EntityType="Self.ADVERT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ADVERTMAINTYPE" EntityType="Self.ADVERTMAINTYPE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ADVERTSUBTYPE" EntityType="Self.ADVERTSUBTYPE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="APPUSER" EntityType="Self.APPUSER" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ABST_ADVERTMAINTYPE" Association="Self.FK_ABST_ADVERTMAINTYPE">
+            <End Role="ADVERTMAINTYPE" EntitySet="ADVERTMAINTYPE" />
+            <End Role="ADVERTSUBTYPE" EntitySet="ADVERTSUBTYPE" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ADVT_ADVERTMAINTYPE" Association="Self.FK_ADVT_ADVERTMAINTYPE">
+            <End Role="ADVERTMAINTYPE" EntitySet="ADVERTMAINTYPE" />
+            <End Role="ADVERT" EntitySet="ADVERT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ADVT_ADVERTSUBTYPE" Association="Self.FK_ADVT_ADVERTSUBTYPE">
+            <End Role="ADVERTSUBTYPE" EntitySet="ADVERTSUBTYPE" />
+            <End Role="ADVERT" EntitySet="ADVERT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ADVT_USER" Association="Self.FK_ADVT_USER">
+            <End Role="APPUSER" EntitySet="APPUSER" />
+            <End Role="ADVERT" EntitySet="ADVERT" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="GRADUATIONModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2006/04/edm">
+        <EntityType Name="ADVERT">
+          <Key>
+            <PropertyRef Name="ADVT_ID" />
+          </Key>
+          <Property Name="ADVT_ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ADVT_DESCRIPTION" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ADVT_ADVERTDATETIME" Type="DateTime" Precision="3" />
+          <Property Name="ADVT_ISOPEN" Type="Boolean" />
+          <NavigationProperty Name="ADVERTMAINTYPE" Relationship="Self.FK_ADVT_ADVERTMAINTYPE" FromRole="ADVERT" ToRole="ADVERTMAINTYPE" />
+          <NavigationProperty Name="ADVERTSUBTYPE" Relationship="Self.FK_ADVT_ADVERTSUBTYPE" FromRole="ADVERT" ToRole="ADVERTSUBTYPE" />
+          <NavigationProperty Name="APPUSER" Relationship="Self.FK_ADVT_USER" FromRole="ADVERT" ToRole="APPUSER" />
+        </EntityType>
+        <EntityType Name="ADVERTMAINTYPE">
+          <Key>
+            <PropertyRef Name="ADTT_ID" />
+          </Key>
+          <Property Name="ADTT_ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ADTT_CODE" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ADTT_DESCRIPTION" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ADVERT" Relationship="Self.FK_ADVT_ADVERTMAINTYPE" FromRole="ADVERTMAINTYPE" ToRole="ADVERT" />
+          <NavigationProperty Name="ADVERTSUBTYPE" Relationship="Self.FK_ABST_ADVERTMAINTYPE" FromRole="ADVERTMAINTYPE" ToRole="ADVERTSUBTYPE" />
+        </EntityType>
+        <EntityType Name="ADVERTSUBTYPE">
+          <Key>
+            <PropertyRef Name="ABST_ID" />
+          </Key>
+          <Property Name="ABST_ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ABST_CODE" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ABST_DESCRIPTION" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ADVERT" Relationship="Self.FK_ADVT_ADVERTSUBTYPE" FromRole="ADVERTSUBTYPE" ToRole="ADVERT" />
+          <NavigationProperty Name="ADVERTMAINTYPE" Relationship="Self.FK_ABST_ADVERTMAINTYPE" FromRole="ADVERTSUBTYPE" ToRole="ADVERTMAINTYPE" />
+        </EntityType>
+        <EntityType Name="APPUSER">
+          <Key>
+            <PropertyRef Name="USER_ID" />
+          </Key>
+          <Property Name="USER_ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="USER_CODE" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="USER_PASSWORD" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="USER_NAMESURNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="USER_EMAIL" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="USER_PHONE" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ADVERT" Relationship="Self.FK_ADVT_USER" FromRole="APPUSER" ToRole="ADVERT" />
+        </EntityType>
+        <Association Name="FK_ADVT_ADVERTMAINTYPE">
+          <End Role="ADVERTMAINTYPE" Type="Self.ADVERTMAINTYPE" Multiplicity="0..1" />
+          <End Role="ADVERT" Type="Self.ADVERT" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_ADVT_ADVERTSUBTYPE">
+          <End Role="ADVERTSUBTYPE" Type="Self.ADVERTSUBTYPE" Multiplicity="0..1" />
+          <End Role="ADVERT" Type="Self.ADVERT" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_ADVT_USER">
+          <End Role="APPUSER" Type="Self.APPUSER" Multiplicity="0..1" />
+          <End Role="ADVERT" Type="Self.ADVERT" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_ABST_ADVERTMAINTYPE">
+          <End Role="ADVERTMAINTYPE" Type="Self.ADVERTMAINTYPE" Multiplicity="0..1" />
+          <End Role="ADVERTSUBTYPE" Type="Self.ADVERTSUBTYPE" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="GRADUATIONEntities">
+          <EntitySet Name="ADVERT" EntityType="Self.ADVERT" />
+          <EntitySet Name="ADVERTMAINTYPE" EntityType="Self.ADVERTMAINTYPE" />
+          <EntitySet Name="ADVERTSUBTYPE" EntityType="Self.ADVERTSUBTYPE" />
+          <EntitySet Name="APPUSER" EntityType="Self.APPUSER" />
+          <AssociationSet Name="FK_ADVT_ADVERTMAINTYPE" Association="Self.FK_ADVT_ADVERTMAINTYPE">
+            <End Role="ADVERTMAINTYPE" EntitySet="ADVERTMAINTYPE" />
+            <End Role="ADVERT" EntitySet="ADVERT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ADVT_ADVERTSUBTYPE" Association="Self.FK_ADVT_ADVERTSUBTYPE">
+            <End Role="ADVERTSUBTYPE" EntitySet="ADVERTSUBTYPE" />
+            <End Role="ADVERT" EntitySet="ADVERT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ADVT_USER" Association="Self.FK_ADVT_USER">
+            <End Role="APPUSER" EntitySet="APPUSER" />
+            <End Role="ADVERT" EntitySet="ADVERT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ABST_ADVERTMAINTYPE" Association="Self.FK_ABST_ADVERTMAINTYPE">
+            <End Role="ADVERTMAINTYPE" EntitySet="ADVERTMAINTYPE" />
+            <End Role="ADVERTSUBTYPE" EntitySet="ADVERTSUBTYPE" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="urn:schemas-microsoft-com:windows:storage:mapping:CS">
+        <EntityContainerMapping StorageEntityContainer="GRADUATIONModelStoreContainer" CdmEntityContainer="GRADUATIONEntities">
+          <EntitySetMapping Name="ADVERT">
+            <EntityTypeMapping TypeName="GRADUATIONModel.ADVERT">
+              <MappingFragment StoreEntitySet="ADVERT">
+                <ScalarProperty Name="ADVT_ID" ColumnName="ADVT_ID" />
+                <ScalarProperty Name="ADVT_DESCRIPTION" ColumnName="ADVT_DESCRIPTION" />
+                <ScalarProperty Name="ADVT_ADVERTDATETIME" ColumnName="ADVT_ADVERTDATETIME" />
+                <ScalarProperty Name="ADVT_ISOPEN" ColumnName="ADVT_ISOPEN" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ADVERTMAINTYPE">
+            <EntityTypeMapping TypeName="GRADUATIONModel.ADVERTMAINTYPE">
+              <MappingFragment StoreEntitySet="ADVERTMAINTYPE">
+                <ScalarProperty Name="ADTT_ID" ColumnName="ADTT_ID" />
+                <ScalarProperty Name="ADTT_CODE" ColumnName="ADTT_CODE" />
+                <ScalarProperty Name="ADTT_DESCRIPTION" ColumnName="ADTT_DESCRIPTION" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ADVERTSUBTYPE">
+            <EntityTypeMapping TypeName="GRADUATIONModel.ADVERTSUBTYPE">
+              <MappingFragment StoreEntitySet="ADVERTSUBTYPE">
+                <ScalarProperty Name="ABST_ID" ColumnName="ABST_ID" />
+                <ScalarProperty Name="ABST_CODE" ColumnName="ABST_CODE" />
+                <ScalarProperty Name="ABST_DESCRIPTION" ColumnName="ABST_DESCRIPTION" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="APPUSER">
+            <EntityTypeMapping TypeName="GRADUATIONModel.APPUSER">
+              <MappingFragment StoreEntitySet="APPUSER">
+                <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+                <ScalarProperty Name="USER_CODE" ColumnName="USER_CODE" />
+                <ScalarProperty Name="USER_PASSWORD" ColumnName="USER_PASSWORD" />
+                <ScalarProperty Name="USER_NAMESURNAME" ColumnName="USER_NAMESURNAME" />
+                <ScalarProperty Name="USER_EMAIL" ColumnName="USER_EMAIL" />
+                <ScalarProperty Name="USER_PHONE" ColumnName="USER_PHONE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="FK_ADVT_ADVERTMAINTYPE" TypeName="GRADUATIONModel.FK_ADVT_ADVERTMAINTYPE" StoreEntitySet="ADVERT">
+            <EndProperty Name="ADVERTMAINTYPE">
+              <ScalarProperty Name="ADTT_ID" ColumnName="ADVT_ADVERTMAINTYPEID" />
+            </EndProperty>
+            <EndProperty Name="ADVERT">
+              <ScalarProperty Name="ADVT_ID" ColumnName="ADVT_ID" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="ADVT_ADVERTMAINTYPEID" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_ADVT_ADVERTSUBTYPE" TypeName="GRADUATIONModel.FK_ADVT_ADVERTSUBTYPE" StoreEntitySet="ADVERT">
+            <EndProperty Name="ADVERTSUBTYPE">
+              <ScalarProperty Name="ABST_ID" ColumnName="ADVT_ADVERTSUBTYPEID" />
+            </EndProperty>
+            <EndProperty Name="ADVERT">
+              <ScalarProperty Name="ADVT_ID" ColumnName="ADVT_ID" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="ADVT_ADVERTSUBTYPEID" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_ADVT_USER" TypeName="GRADUATIONModel.FK_ADVT_USER" StoreEntitySet="ADVERT">
+            <EndProperty Name="APPUSER">
+              <ScalarProperty Name="USER_ID" ColumnName="ADVT_USERID" />
+            </EndProperty>
+            <EndProperty Name="ADVERT">
+              <ScalarProperty Name="ADVT_ID" ColumnName="ADVT_ID" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="ADVT_USERID" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_ABST_ADVERTMAINTYPE" TypeName="GRADUATIONModel.FK_ABST_ADVERTMAINTYPE" StoreEntitySet="ADVERTSUBTYPE">
+            <EndProperty Name="ADVERTMAINTYPE">
+              <ScalarProperty Name="ADTT_ID" ColumnName="ABST_ADVERTMAINTYPEID" />
+            </EndProperty>
+            <EndProperty Name="ADVERTSUBTYPE">
+              <ScalarProperty Name="ABST_ID" ColumnName="ABST_ID" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="ABST_ADVERTMAINTYPEID" />
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2007/06/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="false" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
