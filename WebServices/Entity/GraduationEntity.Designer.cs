@@ -15,7 +15,7 @@
 [assembly: global::System.Data.Objects.DataClasses.EdmRelationshipAttribute("GRADUATIONModel", "FK_ABST_ADVERTMAINTYPE", "ADVERTMAINTYPE", global::System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(WebServices.Entity.ADVERTMAINTYPE), "ADVERTSUBTYPE", global::System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(WebServices.Entity.ADVERTSUBTYPE))]
 
 // Original file name:
-// Generation date: 24.03.2016 18:43:32
+// Generation date: 25.03.2016 14:56:50
 namespace WebServices.Entity
 {
     
@@ -764,6 +764,33 @@ namespace WebServices.Entity
         partial void OnUSER_PHONEChanging(string value);
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnUSER_PHONEChanged();
+        /// <summary>
+        /// There are no comments for property USER_SIGNUPDATE in the schema.
+        /// </summary>
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute()]
+        [global::System.Runtime.Serialization.DataMemberAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
+        public global::System.Nullable<global::System.DateTime> USER_SIGNUPDATE
+        {
+            get
+            {
+                return this._USER_SIGNUPDATE;
+            }
+            set
+            {
+                this.OnUSER_SIGNUPDATEChanging(value);
+                this.ReportPropertyChanging("USER_SIGNUPDATE");
+                this._USER_SIGNUPDATE = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value);
+                this.ReportPropertyChanged("USER_SIGNUPDATE");
+                this.OnUSER_SIGNUPDATEChanged();
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
+        private global::System.Nullable<global::System.DateTime> _USER_SIGNUPDATE;
+        [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
+        partial void OnUSER_SIGNUPDATEChanging(global::System.Nullable<global::System.DateTime> value);
+        [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
+        partial void OnUSER_SIGNUPDATEChanged();
         /// <summary>
         /// There are no comments for ADVERT in the schema.
         /// </summary>

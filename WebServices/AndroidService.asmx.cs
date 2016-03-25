@@ -18,7 +18,7 @@ namespace WebServices
     {
 
         [WebMethod]
-        public Result<bool> SaveUser()
+        public Result<bool> SaveUser(bool IsNewUser_, string Username_, string NameSurname_, string Email_, string Phone_, string Password_)
         {
             Result<bool> result_ = new Result<bool>();
 
@@ -28,21 +28,34 @@ namespace WebServices
                 {
                     using (TransactionScope scope_ = new TransactionScope())
                     {
-                        object userInfo_ = ent_.APPUSER.Where(x => x.USER_CODE.Equals("TestUser") || x.USER_EMAIL.Equals("testuser@gmail.com")).FirstOrDefault();
-                        if (userInfo_ == null)
+                        APPUSER userInfo_ = ent_.APPUSER.Where(x => x.USER_CODE.Equals(Username_) || x.USER_EMAIL.Equals(Email_)).FirstOrDefault();
+                        if (userInfo_ == null && IsNewUser_)
                         {
-                            APPUSER insertUser_ = new APPUSER();
-                            insertUser_.USER_CODE = "TestUser";
-                            insertUser_.USER_NAMESURNAME = "Test User";
-                            insertUser_.USER_EMAIL = "testuser@gmail.com";
-                            insertUser_.USER_PHONE = "542 542 42 42";
-                            insertUser_.USER_PASSWORD = "test123";
-                            ent_.AddToAPPUSER(insertUser_);
+                            userInfo_.USER_CODE = Username_;
+                            userInfo_.USER_NAMESURNAME = NameSurname_;
+                            userInfo_.USER_EMAIL = Email_;
+                            userInfo_.USER_PHONE = Phone_;
+                            userInfo_.USER_PASSWORD = Password_;
+                            userInfo_.USER_SIGNUPDATE = DateTime.Now;
+                            ent_.AddToAPPUSER(userInfo_);
                             ent_.SaveChanges();
                             scope_.Complete();
                             ent_.AcceptAllChanges();
 
                             result_.Message = "Üyelik Kaydı Başarılı!";
+                            result_.Success = true;
+                        }
+                        else if (userInfo_ != null && !IsNewUser_)
+                        {
+                            userInfo_.USER_NAMESURNAME = NameSurname_;
+                            userInfo_.USER_EMAIL = Email_;
+                            userInfo_.USER_PHONE = Phone_;
+                            userInfo_.USER_PASSWORD = Password_;
+                            ent_.SaveChanges();
+                            scope_.Complete();
+                            ent_.AcceptAllChanges();
+
+                            result_.Message = "Üyelik Bilgileri Güncellendi!";
                             result_.Success = true;
                         }
                         else

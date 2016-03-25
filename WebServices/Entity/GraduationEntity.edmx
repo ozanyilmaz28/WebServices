@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="GRADUATIONModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl">
+    <Schema Namespace="GRADUATIONModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl">
         <EntityType Name="ADVERT">
           <Key>
             <PropertyRef Name="ADVT_ID" />
@@ -44,6 +44,7 @@
           <Property Name="USER_NAMESURNAME" Type="nvarchar" MaxLength="50" />
           <Property Name="USER_EMAIL" Type="nvarchar" MaxLength="50" />
           <Property Name="USER_PHONE" Type="nvarchar" MaxLength="50" />
+          <Property Name="USER_SIGNUPDATE" Type="datetime" />
         </EntityType>
         <Association Name="FK_ABST_ADVERTMAINTYPE">
           <End Role="ADVERTMAINTYPE" Type="Self.ADVERTMAINTYPE" Multiplicity="0..1" />
@@ -115,8 +116,7 @@
             <End Role="ADVERT" EntitySet="ADVERT" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="GRADUATIONModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2006/04/edm">
@@ -163,6 +163,7 @@
           <Property Name="USER_EMAIL" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="USER_PHONE" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="ADVERT" Relationship="Self.FK_ADVT_USER" FromRole="APPUSER" ToRole="ADVERT" />
+          <Property Name="USER_SIGNUPDATE" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="FK_ADVT_ADVERTMAINTYPE">
           <End Role="ADVERTMAINTYPE" Type="Self.ADVERTMAINTYPE" Multiplicity="0..1" />
@@ -239,6 +240,7 @@
           <EntitySetMapping Name="APPUSER">
             <EntityTypeMapping TypeName="GRADUATIONModel.APPUSER">
               <MappingFragment StoreEntitySet="APPUSER">
+                <ScalarProperty Name="USER_SIGNUPDATE" ColumnName="USER_SIGNUPDATE" />
                 <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
                 <ScalarProperty Name="USER_CODE" ColumnName="USER_CODE" />
                 <ScalarProperty Name="USER_PASSWORD" ColumnName="USER_PASSWORD" />
