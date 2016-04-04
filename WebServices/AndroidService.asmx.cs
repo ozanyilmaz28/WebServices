@@ -75,5 +75,33 @@ namespace WebServices
             return result_;
         }
 
+        [WebMethod]
+        public Result<List<APPUSER>> GetUserList()
+        {
+            Result<List<APPUSER>> result_ = new Result<List<APPUSER>>();
+
+            try
+            {
+                using (GRADUATIONEntities ent_ = new GRADUATIONEntities())
+                {
+                    result_.Data = ent_.APPUSER.ToList();
+                    if (result_.Data.Count > 0)
+                        result_.Success = true;
+                    else
+                    {
+                        result_.Message = "Kullanıcı Bulunamadı!";
+                        result_.Success = false;
+                    }
+                }
+            }
+            catch (Exception Ex_)
+            {
+                result_.Message = Ex_.GetBaseException().ToString();
+                result_.Success = false;
+            }
+
+            return result_;
+        }
+
     }
 }
