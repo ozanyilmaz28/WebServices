@@ -6,16 +6,54 @@ using System.Web.Services;
 using WebServices.Entity;
 using WebServices.Classes;
 using System.Transactions;
+using System.Text.RegularExpressions;
 
 namespace WebServices
 {
 
-    [WebService(Namespace = "http://tempuri.org/")]
+    [WebService(Namespace = "http://192.168.2.179/AndroidService/")]
+    //[WebService(Namespace = "http://graduationprojectandroidservice.somee.com/")]
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
     [System.ComponentModel.ToolboxItem(false)]
 
     public class AndroidService : System.Web.Services.WebService
     {
+        [WebMethod]
+        public Result<APPUSER> DoLoginAndReturnUserInfo(string UsernameOrMail_, string Password_)
+        {
+            Result<APPUSER> result_ = new Result<APPUSER>();
+
+            try
+            {
+                using (GRADUATIONEntities ent_ = new GRADUATIONEntities())
+                {
+                    APPUSER userInfo_ = null;
+
+                    if (isEmailValid(UsernameOrMail_))
+                        userInfo_ = ent_.APPUSER.Where(x => x.USER_EMAIL.Equals(UsernameOrMail_) && x.USER_PASSWORD.Equals(Password_)).FirstOrDefault();
+                    else
+                        userInfo_ = ent_.APPUSER.Where(x => x.USER_CODE.Equals(UsernameOrMail_) && x.USER_PASSWORD.Equals(Password_)).FirstOrDefault();
+
+                    if (userInfo_ != null)
+                    {
+                        result_.Data = userInfo_;
+                        result_.Success = true;
+                    }
+                    else
+                    {
+                        result_.Message = "Girilen Kullanıcı Bilgileri Hatalı!";
+                        result_.Success = false;
+                    }
+                }
+            }
+            catch (Exception Ex_)
+            {
+                result_.Message = Ex_.GetBaseException().ToString();
+                result_.Success = false;
+            }
+
+            return result_;
+        }
 
         [WebMethod]
         public Result<bool> SaveUser(bool IsNewUser_, string Username_, string NameSurname_, string Email_, string Phone_, string Password_)
@@ -101,6 +139,13 @@ namespace WebServices
             }
 
             return result_;
+        }
+
+        public bool isEmailValid(string eMail_)
+        {
+            string eMailPattern_ = @"^[A-Z0-9._%+-]+@[A-Z0-9.-]+.(com|org|net|edu|gov|mil|biz|info|mobi)(.[A-Z]{2})?$";
+            Regex regex = new Regex(eMailPattern_, RegexOptions.IgnoreCase);
+            return regex.IsMatch(eMail_);
         }
 
     }
