@@ -81,6 +81,7 @@
     <Content Include="Entity\GraduationEntity.edmx.diagram">
       <DependentUpon>GraduationEntity.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\GraduationProject.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
