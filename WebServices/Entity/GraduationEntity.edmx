@@ -16,6 +16,9 @@
           <Property Name="ADVT_ADVERTMAINTYPEID" Type="bigint" />
           <Property Name="ADVT_ADVERTSUBTYPEID" Type="bigint" />
           <Property Name="ADVT_ISOPEN" Type="bit" />
+          <Property Name="ADVT_IMAGE" Type="image" />
+          <Property Name="ADVT_PHONE" Type="nvarchar" MaxLength="15" />
+          <Property Name="ADVT_MAIL" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="ADVERTMAINTYPE">
           <Key>
@@ -131,6 +134,9 @@
           <NavigationProperty Name="ADVERTMAINTYPE" Relationship="Self.FK_ADVT_ADVERTMAINTYPE" FromRole="ADVERT" ToRole="ADVERTMAINTYPE" />
           <NavigationProperty Name="ADVERTSUBTYPE" Relationship="Self.FK_ADVT_ADVERTSUBTYPE" FromRole="ADVERT" ToRole="ADVERTSUBTYPE" />
           <NavigationProperty Name="APPUSER" Relationship="Self.FK_ADVT_USER" FromRole="ADVERT" ToRole="APPUSER" />
+          <Property Name="ADVT_IMAGE" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="ADVT_PHONE" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="ADVT_MAIL" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="ADVERTMAINTYPE">
           <Key>
@@ -212,6 +218,9 @@
           <EntitySetMapping Name="ADVERT">
             <EntityTypeMapping TypeName="GRADUATIONModel.ADVERT">
               <MappingFragment StoreEntitySet="ADVERT">
+                <ScalarProperty Name="ADVT_MAIL" ColumnName="ADVT_MAIL" />
+                <ScalarProperty Name="ADVT_PHONE" ColumnName="ADVT_PHONE" />
+                <ScalarProperty Name="ADVT_IMAGE" ColumnName="ADVT_IMAGE" />
                 <ScalarProperty Name="ADVT_ID" ColumnName="ADVT_ID" />
                 <ScalarProperty Name="ADVT_DESCRIPTION" ColumnName="ADVT_DESCRIPTION" />
                 <ScalarProperty Name="ADVT_ADVERTDATETIME" ColumnName="ADVT_ADVERTDATETIME" />

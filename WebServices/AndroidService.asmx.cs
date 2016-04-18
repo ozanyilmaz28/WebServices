@@ -7,12 +7,14 @@ using WebServices.Entity;
 using WebServices.Classes;
 using System.Transactions;
 using System.Text.RegularExpressions;
+using System.Drawing;
+using System.IO;
 
 namespace WebServices
 {
 
-    [WebService(Namespace = "http://192.168.2.179/AndroidService/")]
-    //[WebService(Namespace = "http://graduationprojectandroidservice.somee.com/")]
+    //[WebService(Namespace = "http://192.168.2.181/AndroidService/")]
+    [WebService(Namespace = "http://graduationprojectandroidservice.somee.com/")]
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
     [System.ComponentModel.ToolboxItem(false)]
 
@@ -119,7 +121,7 @@ namespace WebServices
         }
 
         [WebMethod]
-        public Result<bool> DoInsertAndUpdateAdvert(bool IsNewAdvert_, int AdvertID_)
+        public Result<bool> DoInsertAndUpdateAdvert(int AdvertID_, long AdvertMainTypeID_, long AdvertSubTypeID_, string AdvertDescription_, long UserID_, string Phone_, string Mail_, string Image_)
         {
             Result<bool> result_ = new Result<bool>();
 
@@ -129,11 +131,22 @@ namespace WebServices
                 {
                     using (TransactionScope scope_ = new TransactionScope())
                     {
-                        if (IsNewAdvert_)
+                        if (AdvertID_ <= 0)
                         {
                             ADVERT advert_ = new ADVERT();
 
-
+                            advert_.ADVERTMAINTYPE = ent_.ADVERTMAINTYPE.Where(c => c.ADTT_ID == AdvertMainTypeID_).FirstOrDefault();
+                            if (AdvertSubTypeID_ > 0)
+                                advert_.ADVERTSUBTYPE = ent_.ADVERTSUBTYPE.Where(c => c.ABST_ID == AdvertSubTypeID_).FirstOrDefault();
+                            if (UserID_ > 0)
+                                advert_.APPUSER = ent_.APPUSER.Where(c => c.USER_ID == AdvertSubTypeID_).FirstOrDefault();
+                            if (!string.IsNullOrEmpty(Image_))
+                                advert_.ADVT_IMAGE = Convert.FromBase64String(Image_);
+                            advert_.ADVT_DESCRIPTION = AdvertDescription_;
+                            advert_.ADVT_ISOPEN = true;
+                            advert_.ADVT_MAIL = Mail_;
+                            advert_.ADVT_PHONE = Phone_;
+                            advert_.ADVT_ADVERTDATETIME = DateTime.Now;
 
                             ent_.AddToADVERT(advert_);
                             ent_.SaveChanges();
@@ -148,8 +161,6 @@ namespace WebServices
                             ADVERT advertInfo_ = ent_.ADVERT.Where(x => x.ADVT_ID == (AdvertID_)).FirstOrDefault();
                             if (advertInfo_ != null)
                             {
-
-
 
                                 ent_.SaveChanges();
                                 scope_.Complete();
@@ -191,6 +202,34 @@ namespace WebServices
                     else
                     {
                         result_.Message = "Kullanıcı Bulunamadı!";
+                        result_.Success = false;
+                    }
+                }
+            }
+            catch (Exception Ex_)
+            {
+                result_.Message = Ex_.GetBaseException().ToString();
+                result_.Success = false;
+            }
+
+            return result_;
+        }
+
+        [WebMethod]
+        public Result<List<ADVERT>> GetAdvertList()
+        {
+            Result<List<ADVERT>> result_ = new Result<List<ADVERT>>();
+
+            try
+            {
+                using (GRADUATIONEntities ent_ = new GRADUATIONEntities())
+                {
+                    result_.Data = ent_.ADVERT.ToList();
+                    if (result_.Data.Count > 0)
+                        result_.Success = true;
+                    else
+                    {
+                        result_.Message = "İlan Bulunamadı!";
                         result_.Success = false;
                     }
                 }

@@ -15,7 +15,7 @@
 [assembly: global::System.Data.Objects.DataClasses.EdmRelationshipAttribute("GRADUATIONModel", "FK_ABST_ADVERTMAINTYPE", "ADVERTMAINTYPE", global::System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(WebServices.Entity.ADVERTMAINTYPE), "ADVERTSUBTYPE", global::System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(WebServices.Entity.ADVERTSUBTYPE))]
 
 // Original file name:
-// Generation date: 25.03.2016 14:56:50
+// Generation date: 18.04.2016 21:35:14
 namespace WebServices.Entity
 {
     
@@ -149,6 +149,87 @@ namespace WebServices.Entity
         partial void OnADVT_ISOPENChanging(global::System.Nullable<bool> value);
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnADVT_ISOPENChanged();
+        /// <summary>
+        /// There are no comments for property ADVT_IMAGE in the schema.
+        /// </summary>
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute()]
+        [global::System.Runtime.Serialization.DataMemberAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
+        public byte[] ADVT_IMAGE
+        {
+            get
+            {
+                return global::System.Data.Objects.DataClasses.StructuralObject.GetValidValue(this._ADVT_IMAGE);
+            }
+            set
+            {
+                this.OnADVT_IMAGEChanging(value);
+                this.ReportPropertyChanging("ADVT_IMAGE");
+                this._ADVT_IMAGE = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value, true);
+                this.ReportPropertyChanged("ADVT_IMAGE");
+                this.OnADVT_IMAGEChanged();
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
+        private byte[] _ADVT_IMAGE;
+        [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
+        partial void OnADVT_IMAGEChanging(byte[] value);
+        [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
+        partial void OnADVT_IMAGEChanged();
+        /// <summary>
+        /// There are no comments for property ADVT_PHONE in the schema.
+        /// </summary>
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute()]
+        [global::System.Runtime.Serialization.DataMemberAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
+        public string ADVT_PHONE
+        {
+            get
+            {
+                return this._ADVT_PHONE;
+            }
+            set
+            {
+                this.OnADVT_PHONEChanging(value);
+                this.ReportPropertyChanging("ADVT_PHONE");
+                this._ADVT_PHONE = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value, true);
+                this.ReportPropertyChanged("ADVT_PHONE");
+                this.OnADVT_PHONEChanged();
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
+        private string _ADVT_PHONE;
+        [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
+        partial void OnADVT_PHONEChanging(string value);
+        [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
+        partial void OnADVT_PHONEChanged();
+        /// <summary>
+        /// There are no comments for property ADVT_MAIL in the schema.
+        /// </summary>
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute()]
+        [global::System.Runtime.Serialization.DataMemberAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
+        public string ADVT_MAIL
+        {
+            get
+            {
+                return this._ADVT_MAIL;
+            }
+            set
+            {
+                this.OnADVT_MAILChanging(value);
+                this.ReportPropertyChanging("ADVT_MAIL");
+                this._ADVT_MAIL = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value, true);
+                this.ReportPropertyChanged("ADVT_MAIL");
+                this.OnADVT_MAILChanged();
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
+        private string _ADVT_MAIL;
+        [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
+        partial void OnADVT_MAILChanging(string value);
+        [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
+        partial void OnADVT_MAILChanged();
         /// <summary>
         /// There are no comments for ADVERTMAINTYPE in the schema.
         /// </summary>
