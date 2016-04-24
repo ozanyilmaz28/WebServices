@@ -19,6 +19,7 @@
           <Property Name="ADVT_IMAGE" Type="image" />
           <Property Name="ADVT_PHONE" Type="nvarchar" MaxLength="15" />
           <Property Name="ADVT_MAIL" Type="nvarchar" MaxLength="50" />
+          <Property Name="ADVT_PRICE" Type="int" />
         </EntityType>
         <EntityType Name="ADVERTMAINTYPE">
           <Key>
@@ -137,6 +138,7 @@
           <Property Name="ADVT_IMAGE" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="ADVT_PHONE" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
           <Property Name="ADVT_MAIL" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ADVT_PRICE" Type="Int32" />
         </EntityType>
         <EntityType Name="ADVERTMAINTYPE">
           <Key>
@@ -218,6 +220,7 @@
           <EntitySetMapping Name="ADVERT">
             <EntityTypeMapping TypeName="GRADUATIONModel.ADVERT">
               <MappingFragment StoreEntitySet="ADVERT">
+                <ScalarProperty Name="ADVT_PRICE" ColumnName="ADVT_PRICE" />
                 <ScalarProperty Name="ADVT_MAIL" ColumnName="ADVT_MAIL" />
                 <ScalarProperty Name="ADVT_PHONE" ColumnName="ADVT_PHONE" />
                 <ScalarProperty Name="ADVT_IMAGE" ColumnName="ADVT_IMAGE" />

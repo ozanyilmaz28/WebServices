@@ -32,9 +32,9 @@ namespace WebServices
                     APPUSER userInfo_ = null;
 
                     if (isEmailValid(UsernameOrMail_))
-                        userInfo_ = ent_.APPUSER.Where(x => x.USER_EMAIL.Equals(UsernameOrMail_) && x.USER_PASSWORD.Equals(Password_)).FirstOrDefault();
+                        userInfo_ = ent_.APPUSER.Where(x => x.USER_EMAIL.Equals(UsernameOrMail_, StringComparison.InvariantCultureIgnoreCase) && x.USER_PASSWORD.Equals(Password_)).FirstOrDefault();
                     else
-                        userInfo_ = ent_.APPUSER.Where(x => x.USER_CODE.Equals(UsernameOrMail_) && x.USER_PASSWORD.Equals(Password_)).FirstOrDefault();
+                        userInfo_ = ent_.APPUSER.Where(x => x.USER_CODE.Equals(UsernameOrMail_, StringComparison.InvariantCultureIgnoreCase) && x.USER_PASSWORD.Equals(Password_)).FirstOrDefault();
 
                     if (userInfo_ != null)
                     {
@@ -58,9 +58,9 @@ namespace WebServices
         }
 
         [WebMethod]
-        public Result<bool> DoInsertAndUpdateUser(bool IsNewUser_, string Username_, string NameSurname_, string Email_, string Phone_, string Password_)
+        public Result<APPUSER> DoInsertAndUpdateUser(bool IsNewUser_, string Username_, string NameSurname_, string Email_, string Phone_, string Password_)
         {
-            Result<bool> result_ = new Result<bool>();
+            Result<APPUSER> result_ = new Result<APPUSER>();
 
             try
             {
@@ -68,9 +68,10 @@ namespace WebServices
                 {
                     using (TransactionScope scope_ = new TransactionScope())
                     {
-                        APPUSER userInfo_ = ent_.APPUSER.Where(x => x.USER_CODE.Equals(Username_) || x.USER_EMAIL.Equals(Email_)).FirstOrDefault();
+                        APPUSER userInfo_ = ent_.APPUSER.Where(x => x.USER_CODE.Equals(Username_, StringComparison.InvariantCultureIgnoreCase) || x.USER_EMAIL.Equals(Email_, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
                         if (userInfo_ == null && IsNewUser_)
                         {
+                            userInfo_ = new APPUSER();
                             userInfo_.USER_CODE = Username_;
                             userInfo_.USER_NAMESURNAME = NameSurname_;
                             userInfo_.USER_EMAIL = Email_;
@@ -82,6 +83,7 @@ namespace WebServices
                             scope_.Complete();
                             ent_.AcceptAllChanges();
 
+                            result_.Data = userInfo_;
                             result_.Message = "Üyelik Kaydı Başarılı!";
                             result_.Success = true;
                         }
@@ -95,6 +97,7 @@ namespace WebServices
                             scope_.Complete();
                             ent_.AcceptAllChanges();
 
+                            result_.Data = userInfo_;
                             result_.Message = "Üyelik Bilgileri Güncellendi!";
                             result_.Success = true;
                         }
@@ -121,7 +124,7 @@ namespace WebServices
         }
 
         [WebMethod]
-        public Result<bool> DoInsertAndUpdateAdvert(int AdvertID_, long AdvertMainTypeID_, long AdvertSubTypeID_, string AdvertDescription_, long UserID_, string Phone_, string Mail_, string Image_)
+        public Result<bool> DoInsertAndUpdateAdvert(int AdvertID_, long AdvertMainTypeID_, string AdvertSubTypeDescription_, string AdvertDescription_, long UserID_, string Phone_, string Mail_, string Image_, int Price_, bool TR_)
         {
             Result<bool> result_ = new Result<bool>();
 
@@ -136,10 +139,12 @@ namespace WebServices
                             ADVERT advert_ = new ADVERT();
 
                             advert_.ADVERTMAINTYPE = ent_.ADVERTMAINTYPE.Where(c => c.ADTT_ID == AdvertMainTypeID_).FirstOrDefault();
-                            if (AdvertSubTypeID_ > 0)
-                                advert_.ADVERTSUBTYPE = ent_.ADVERTSUBTYPE.Where(c => c.ABST_ID == AdvertSubTypeID_).FirstOrDefault();
+                            if (!string.IsNullOrEmpty(AdvertSubTypeDescription_) && TR_)
+                                advert_.ADVERTSUBTYPE = ent_.ADVERTSUBTYPE.Where(c => c.ABST_DESCRIPTION.Equals(AdvertSubTypeDescription_)).FirstOrDefault();
+                            if (!string.IsNullOrEmpty(AdvertSubTypeDescription_) && !TR_)
+                                advert_.ADVERTSUBTYPE = ent_.ADVERTSUBTYPE.Where(c => c.ABST_CODE.Equals(AdvertSubTypeDescription_)).FirstOrDefault();
                             if (UserID_ > 0)
-                                advert_.APPUSER = ent_.APPUSER.Where(c => c.USER_ID == AdvertSubTypeID_).FirstOrDefault();
+                                advert_.APPUSER = ent_.APPUSER.Where(c => c.USER_ID == UserID_).FirstOrDefault();
                             if (!string.IsNullOrEmpty(Image_))
                                 advert_.ADVT_IMAGE = Convert.FromBase64String(Image_);
                             advert_.ADVT_DESCRIPTION = AdvertDescription_;
@@ -147,6 +152,7 @@ namespace WebServices
                             advert_.ADVT_MAIL = Mail_;
                             advert_.ADVT_PHONE = Phone_;
                             advert_.ADVT_ADVERTDATETIME = DateTime.Now;
+                            advert_.ADVT_PRICE = Price_;
 
                             ent_.AddToADVERT(advert_);
                             ent_.SaveChanges();

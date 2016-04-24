@@ -15,7 +15,7 @@
 [assembly: global::System.Data.Objects.DataClasses.EdmRelationshipAttribute("GRADUATIONModel", "FK_ABST_ADVERTMAINTYPE", "ADVERTMAINTYPE", global::System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(WebServices.Entity.ADVERTMAINTYPE), "ADVERTSUBTYPE", global::System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(WebServices.Entity.ADVERTSUBTYPE))]
 
 // Original file name:
-// Generation date: 18.04.2016 21:35:14
+// Generation date: 24.04.2016 11:15:07
 namespace WebServices.Entity
 {
     
@@ -230,6 +230,33 @@ namespace WebServices.Entity
         partial void OnADVT_MAILChanging(string value);
         [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
         partial void OnADVT_MAILChanged();
+        /// <summary>
+        /// There are no comments for property ADVT_PRICE in the schema.
+        /// </summary>
+        [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute()]
+        [global::System.Runtime.Serialization.DataMemberAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
+        public global::System.Nullable<int> ADVT_PRICE
+        {
+            get
+            {
+                return this._ADVT_PRICE;
+            }
+            set
+            {
+                this.OnADVT_PRICEChanging(value);
+                this.ReportPropertyChanging("ADVT_PRICE");
+                this._ADVT_PRICE = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value);
+                this.ReportPropertyChanged("ADVT_PRICE");
+                this.OnADVT_PRICEChanged();
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
+        private global::System.Nullable<int> _ADVT_PRICE;
+        [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
+        partial void OnADVT_PRICEChanging(global::System.Nullable<int> value);
+        [global::System.CodeDom.Compiler.GeneratedCode("System.Data.Entity.Design.EntityClassGenerator", "4.0.0.0")]
+        partial void OnADVT_PRICEChanged();
         /// <summary>
         /// There are no comments for ADVERTMAINTYPE in the schema.
         /// </summary>
