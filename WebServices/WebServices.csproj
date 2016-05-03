@@ -58,13 +58,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AndroidService.asmx" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AndroidService.asmx.cs">
       <DependentUpon>AndroidService.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Classes\Advert.cs" />
     <Compile Include="Classes\Result.cs" />
     <Compile Include="Entity\GraduationEntity.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -222,17 +222,42 @@ namespace WebServices
         }
 
         [WebMethod]
-        public Result<List<ADVERT>> GetAdvertList()
+        public Result<List<Advert>> GetUserAdvertList(long UserID_)
         {
-            Result<List<ADVERT>> result_ = new Result<List<ADVERT>>();
+            Result<List<Advert>> result_ = new Result<List<Advert>>();
 
             try
             {
                 using (GRADUATIONEntities ent_ = new GRADUATIONEntities())
                 {
-                    result_.Data = ent_.ADVERT.ToList();
-                    if (result_.Data.Count > 0)
+
+                    var linqSelect = (from advert in ent_.ADVERT
+                                      join maintype in ent_.ADVERTMAINTYPE on advert.ADVERTMAINTYPE equals maintype
+                                      join subtype in ent_.ADVERTSUBTYPE on advert.ADVERTSUBTYPE equals subtype
+                                      join user in ent_.APPUSER on advert.APPUSER equals user
+                                      where user.USER_ID == UserID_
+                                      select new Advert
+                                      {
+                                          MainCategoryCode = maintype.ADTT_CODE,
+                                          SubCategoryCode = subtype.ABST_CODE,
+                                          Description = advert.ADVT_DESCRIPTION,
+                                          Datetime = advert.ADVT_ADVERTDATETIME,
+                                          Price = advert.ADVT_PRICE,
+                                          Phone = advert.ADVT_PHONE,
+                                          Mail = advert.ADVT_MAIL,
+                                          ID = advert.ADVT_ID
+                                      }).ToList();
+
+                    if (linqSelect != null && linqSelect.Count > 0)
+                    {
+                        foreach (Advert advert_ in linqSelect)
+                        {
+                            if (!string.IsNullOrEmpty(advert_.SubCategoryCode))
+                                advert_.MainCategoryCode += " - " + advert_.SubCategoryCode;
+                        }
+                        result_.Data = linqSelect;
                         result_.Success = true;
+                    }
                     else
                     {
                         result_.Message = "İlan Bulunamadı!";
