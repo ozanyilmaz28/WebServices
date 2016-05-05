@@ -137,16 +137,20 @@ namespace WebServices
                         if (AdvertID_ <= 0)
                         {
                             ADVERT advert_ = new ADVERT();
+                            string subDesc_ = "";
+                            if (string.IsNullOrEmpty(AdvertSubTypeDescription_))
+                                subDesc_ = Convert.ToString(AdvertMainTypeID_);
+                            else
+                                subDesc_ = AdvertSubTypeDescription_;
 
                             advert_.ADVERTMAINTYPE = ent_.ADVERTMAINTYPE.Where(c => c.ADTT_ID == AdvertMainTypeID_).FirstOrDefault();
-                            if (!string.IsNullOrEmpty(AdvertSubTypeDescription_) && TR_)
-                                advert_.ADVERTSUBTYPE = ent_.ADVERTSUBTYPE.Where(c => c.ABST_DESCRIPTION.Equals(AdvertSubTypeDescription_)).FirstOrDefault();
-                            if (!string.IsNullOrEmpty(AdvertSubTypeDescription_) && !TR_)
-                                advert_.ADVERTSUBTYPE = ent_.ADVERTSUBTYPE.Where(c => c.ABST_CODE.Equals(AdvertSubTypeDescription_)).FirstOrDefault();
+                            if (TR_)
+                                advert_.ADVERTSUBTYPE = ent_.ADVERTSUBTYPE.Where(c => c.ABST_DESCRIPTION.Equals(subDesc_)).FirstOrDefault();
+                            if (!TR_)
+                                advert_.ADVERTSUBTYPE = ent_.ADVERTSUBTYPE.Where(c => c.ABST_CODE.Equals(subDesc_)).FirstOrDefault();
                             if (UserID_ > 0)
                                 advert_.APPUSER = ent_.APPUSER.Where(c => c.USER_ID == UserID_).FirstOrDefault();
-                            if (!string.IsNullOrEmpty(Image_))
-                                advert_.ADVT_IMAGE = Convert.FromBase64String(Image_);
+
                             advert_.ADVT_DESCRIPTION = AdvertDescription_;
                             advert_.ADVT_ISOPEN = true;
                             advert_.ADVT_MAIL = Mail_;
@@ -161,6 +165,16 @@ namespace WebServices
 
                             result_.Message = "İlan Başarıyla Kaydedildi!";
                             result_.Success = true;
+
+                            try
+                            {
+                                if (!string.IsNullOrEmpty(Image_))
+                                    createImageAndReturnURL(Image_, advert_.ADVT_ID);
+                            }
+                            catch (Exception ex_)
+                            {
+                                result_.Message += "-----" + ex_.ToString();
+                            }
                         }
                         else
                         {
@@ -252,8 +266,17 @@ namespace WebServices
                     {
                         foreach (Advert advert_ in linqSelect)
                         {
-                            if (!string.IsNullOrEmpty(advert_.SubCategoryCode))
+                            if (!string.IsNullOrEmpty(advert_.SubCategoryCode) && !isNumeric(advert_.SubCategoryCode))
                                 advert_.MainCategoryCode += " - " + advert_.SubCategoryCode;
+                            if (File.Exists(HttpContext.Current.Server.MapPath("" + advert_.ID + ".png")))
+                            {
+                                string path_ = HttpContext.Current.Server.MapPath("" + advert_.ID + ".png");
+                                int len1 = path_.IndexOf('w');
+                                int len2 = path_.Length;
+                                advert_.ImageLink = path_.Substring(len1, len2 - len1);
+                            }
+                            else
+                                advert_.ImageLink = "-";
                         }
                         result_.Data = linqSelect;
                         result_.Success = true;
@@ -279,6 +302,29 @@ namespace WebServices
             string eMailPattern_ = @"^[A-Z0-9._%+-]+@[A-Z0-9.-]+.(com|org|net|edu|gov|mil|biz|info|mobi)(.[A-Z]{2})?$";
             Regex regex = new Regex(eMailPattern_, RegexOptions.IgnoreCase);
             return regex.IsMatch(eMail_);
+        }
+
+        public static bool isNumeric(string value)
+        {
+            double oReturn = 0;
+            return double.TryParse(value, out oReturn);
+        }
+
+        [WebMethod]
+        public string createImageAndReturnURL(string Image_, long AdvertID_)
+        {
+            //string productionImagePath_ = "~/Documents/RecordImages/" + AdvertID_;
+            //if (!Directory.Exists(HttpContext.Current.Server.MapPath(productionImagePath_)))
+            //    Directory.CreateDirectory(HttpContext.Current.Server.MapPath(productionImagePath_));
+            //productionImagePath_ += "/" + AdvertID_ + ".png";
+            //Image_ = Image_.Replace(@"\n", "");
+            //byte[] productionImage_ = Convert.FromBase64String(Image_);
+            //File.WriteAllBytes(HttpContext.Current.Server.MapPath(productionImagePath_), productionImage_);
+            //return HttpContext.Current.Server.MapPath(productionImagePath_);
+            Image_ = Image_.Replace(@"\n", "");
+            byte[] productionImage_ = Convert.FromBase64String(Image_);
+            File.WriteAllBytes(HttpContext.Current.Server.MapPath("" + AdvertID_ + ".png"), productionImage_);
+            return HttpContext.Current.Server.MapPath("" + AdvertID_ + ".png");
         }
 
     }
