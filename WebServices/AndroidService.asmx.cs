@@ -297,6 +297,67 @@ namespace WebServices
             return result_;
         }
 
+        [WebMethod]
+        public Result<List<Advert>> GetAdvertList(long AdvertMainTypeID_)
+        {
+            Result<List<Advert>> result_ = new Result<List<Advert>>();
+
+            try
+            {
+                using (GRADUATIONEntities ent_ = new GRADUATIONEntities())
+                {
+                    var linqSelect = (from advert in ent_.ADVERT
+                                      join maintype in ent_.ADVERTMAINTYPE on advert.ADVERTMAINTYPE equals maintype
+                                      join subtype in ent_.ADVERTSUBTYPE on advert.ADVERTSUBTYPE equals subtype
+                                      join user in ent_.APPUSER on advert.APPUSER equals user
+                                      where maintype.ADTT_ID == AdvertMainTypeID_ 
+                                      select new Advert
+                                      {
+                                          MainCategoryCode = maintype.ADTT_CODE,
+                                          SubCategoryCode = subtype.ABST_CODE,
+                                          Description = advert.ADVT_DESCRIPTION,
+                                          Datetime = advert.ADVT_ADVERTDATETIME,
+                                          Price = advert.ADVT_PRICE,
+                                          Phone = advert.ADVT_PHONE,
+                                          Mail = advert.ADVT_MAIL,
+                                          ID = advert.ADVT_ID
+                                      }).ToList();
+
+                    if (linqSelect != null && linqSelect.Count > 0)
+                    {
+                        foreach (Advert advert_ in linqSelect)
+                        {
+                            if (!string.IsNullOrEmpty(advert_.SubCategoryCode) && !isNumeric(advert_.SubCategoryCode))
+                                advert_.MainCategoryCode += " - " + advert_.SubCategoryCode;
+                            if (File.Exists(HttpContext.Current.Server.MapPath("" + advert_.ID + ".png")))
+                            {
+                                string path_ = HttpContext.Current.Server.MapPath("" + advert_.ID + ".png");
+                                int len1 = path_.IndexOf('w');
+                                int len2 = path_.Length;
+                                advert_.ImageLink = path_.Substring(len1, len2 - len1);
+                            }
+                            else
+                                advert_.ImageLink = "-";
+                        }
+                        result_.Data = linqSelect;
+                        result_.Success = true;
+                    }
+                    else
+                    {
+                        result_.Message = "İlan Bulunamadı!";
+                        result_.Success = false;
+                    }
+                }
+            }
+            catch (Exception Ex_)
+            {
+                result_.Message = Ex_.GetBaseException().ToString();
+                result_.Success = false;
+            }
+
+            return result_;
+        }
+
         public bool isEmailValid(string eMail_)
         {
             string eMailPattern_ = @"^[A-Z0-9._%+-]+@[A-Z0-9.-]+.(com|org|net|edu|gov|mil|biz|info|mobi)(.[A-Z]{2})?$";
