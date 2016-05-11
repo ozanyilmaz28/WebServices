@@ -13,8 +13,8 @@ using System.IO;
 namespace WebServices
 {
 
-    //[WebService(Namespace = "http://192.168.2.181/AndroidService/")]
-    [WebService(Namespace = "http://graduationprojectandroidservice.somee.com/")]
+    [WebService(Namespace = "http://graduationprojectwebservice.azurewebsites.net/")]
+    //[WebService(Namespace = "http://graduationprojectandroidservice.somee.com/")]
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
     [System.ComponentModel.ToolboxItem(false)]
 
@@ -268,9 +268,9 @@ namespace WebServices
                         {
                             if (!string.IsNullOrEmpty(advert_.SubCategoryCode) && !isNumeric(advert_.SubCategoryCode))
                                 advert_.MainCategoryCode += " - " + advert_.SubCategoryCode;
-                            if (File.Exists(HttpContext.Current.Server.MapPath("" + advert_.ID + ".png")))
+                            if (File.Exists(VirtualPathUtility.ToAbsolute("~/" + advert_.ID + ".png")))
                             {
-                                string path_ = HttpContext.Current.Server.MapPath("" + advert_.ID + ".png");
+                                string path_ = VirtualPathUtility.ToAbsolute("~/" + advert_.ID + ".png");
                                 int len1 = path_.IndexOf('w');
                                 int len2 = path_.Length;
                                 advert_.ImageLink = path_.Substring(len1, len2 - len1);
@@ -329,9 +329,9 @@ namespace WebServices
                         {
                             if (!string.IsNullOrEmpty(advert_.SubCategoryCode) && !isNumeric(advert_.SubCategoryCode))
                                 advert_.MainCategoryCode += " - " + advert_.SubCategoryCode;
-                            if (File.Exists(HttpContext.Current.Server.MapPath("" + advert_.ID + ".png")))
+                            if (File.Exists(VirtualPathUtility.ToAbsolute("~/" + advert_.ID + ".png")))
                             {
-                                string path_ = HttpContext.Current.Server.MapPath("" + advert_.ID + ".png");
+                                string path_ = VirtualPathUtility.ToAbsolute("~/" + advert_.ID + ".png");
                                 int len1 = path_.IndexOf('w');
                                 int len2 = path_.Length;
                                 advert_.ImageLink = path_.Substring(len1, len2 - len1);
@@ -390,12 +390,12 @@ namespace WebServices
                         {
                             if (!string.IsNullOrEmpty(advert_.SubCategoryCode) && !isNumeric(advert_.SubCategoryCode))
                                 advert_.MainCategoryCode += " - " + advert_.SubCategoryCode;
-                            if (File.Exists(HttpContext.Current.Server.MapPath("" + advert_.ID + ".png")))
+                            if (File.Exists(VirtualPathUtility.ToAbsolute("~/" + advert_.ID + ".png")))
                             {
-                                string path_ = HttpContext.Current.Server.MapPath("" + advert_.ID + ".png");
-                                int len1 = path_.IndexOf('w');
-                                int len2 = path_.Length;
-                                advert_.ImageLink = path_.Substring(len1, len2 - len1);
+                                string path_ = VirtualPathUtility.ToAbsolute("~/" + advert_.ID + ".png");
+                                //int len1 = path_.IndexOf('w');
+                                //int len2 = path_.Length;
+                                advert_.ImageLink = path_;
                             }
                             else
                                 advert_.ImageLink = "-";
@@ -445,9 +445,16 @@ namespace WebServices
             //return HttpContext.Current.Server.MapPath(productionImagePath_);
             Image_ = Image_.Replace(@"\n", "");
             byte[] productionImage_ = Convert.FromBase64String(Image_);
-            File.WriteAllBytes(HttpContext.Current.Server.MapPath("" + AdvertID_ + ".png"), productionImage_);
-            return HttpContext.Current.Server.MapPath("" + AdvertID_ + ".png");
+            File.WriteAllBytes(VirtualPathUtility.ToAbsolute("~/" + AdvertID_ + ".png"), productionImage_);
+            return VirtualPathUtility.ToAbsolute("~/" + AdvertID_ + ".png");
         }
 
+        [WebMethod]
+        public string serverPath()
+        {
+            return VirtualPathUtility.ToAbsolute("~/");
+            //return HttpContext.Current.Request.ApplicationPath;
+           
+        }
     }
 }
