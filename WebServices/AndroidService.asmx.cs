@@ -271,9 +271,7 @@ namespace WebServices
                             if (File.Exists(VirtualPathUtility.ToAbsolute("~/" + advert_.ID + ".png")))
                             {
                                 string path_ = VirtualPathUtility.ToAbsolute("~/" + advert_.ID + ".png");
-                                int len1 = path_.IndexOf('w');
-                                int len2 = path_.Length;
-                                advert_.ImageLink = path_.Substring(len1, len2 - len1);
+                                advert_.ImageLink = path_;
                             }
                             else
                                 advert_.ImageLink = "-";
@@ -332,9 +330,7 @@ namespace WebServices
                             if (File.Exists(VirtualPathUtility.ToAbsolute("~/" + advert_.ID + ".png")))
                             {
                                 string path_ = VirtualPathUtility.ToAbsolute("~/" + advert_.ID + ".png");
-                                int len1 = path_.IndexOf('w');
-                                int len2 = path_.Length;
-                                advert_.ImageLink = path_.Substring(len1, len2 - len1);
+                                advert_.ImageLink = path_;
                             }
                             else
                                 advert_.ImageLink = "-";
@@ -393,8 +389,6 @@ namespace WebServices
                             if (File.Exists(VirtualPathUtility.ToAbsolute("~/" + advert_.ID + ".png")))
                             {
                                 string path_ = VirtualPathUtility.ToAbsolute("~/" + advert_.ID + ".png");
-                                //int len1 = path_.IndexOf('w');
-                                //int len2 = path_.Length;
                                 advert_.ImageLink = path_;
                             }
                             else
@@ -435,14 +429,6 @@ namespace WebServices
         [WebMethod]
         public string createImageAndReturnURL(string Image_, long AdvertID_)
         {
-            //string productionImagePath_ = "~/Documents/RecordImages/" + AdvertID_;
-            //if (!Directory.Exists(HttpContext.Current.Server.MapPath(productionImagePath_)))
-            //    Directory.CreateDirectory(HttpContext.Current.Server.MapPath(productionImagePath_));
-            //productionImagePath_ += "/" + AdvertID_ + ".png";
-            //Image_ = Image_.Replace(@"\n", "");
-            //byte[] productionImage_ = Convert.FromBase64String(Image_);
-            //File.WriteAllBytes(HttpContext.Current.Server.MapPath(productionImagePath_), productionImage_);
-            //return HttpContext.Current.Server.MapPath(productionImagePath_);
             Image_ = Image_.Replace(@"\n", "");
             byte[] productionImage_ = Convert.FromBase64String(Image_);
             File.WriteAllBytes(VirtualPathUtility.ToAbsolute("~/" + AdvertID_ + ".png"), productionImage_);
