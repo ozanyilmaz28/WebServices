@@ -252,6 +252,7 @@ namespace WebServices
                                       where user.USER_ID == UserID_
                                       select new Advert
                                       {
+                                          IsOpen = advert.ADVT_ISOPEN,
                                           MainCategoryCode = maintype.ADTT_CODE,
                                           SubCategoryCode = subtype.ABST_CODE,
                                           Description = advert.ADVT_DESCRIPTION,
@@ -308,9 +309,10 @@ namespace WebServices
                                       join maintype in ent_.ADVERTMAINTYPE on advert.ADVERTMAINTYPE equals maintype
                                       join subtype in ent_.ADVERTSUBTYPE on advert.ADVERTSUBTYPE equals subtype
                                       join user in ent_.APPUSER on advert.APPUSER equals user
-                                      where maintype.ADTT_ID == AdvertMainTypeID_ 
+                                      where maintype.ADTT_ID == AdvertMainTypeID_ && advert.ADVT_ISOPEN == true
                                       select new Advert
                                       {
+                                          IsOpen = advert.ADVT_ISOPEN,
                                           MainCategoryCode = maintype.ADTT_CODE,
                                           SubCategoryCode = subtype.ABST_CODE,
                                           Description = advert.ADVT_DESCRIPTION,
@@ -354,7 +356,6 @@ namespace WebServices
             return result_;
         }
 
-
         [WebMethod]
         public Result<List<Advert>> GetTop15AdvertList()
         {
@@ -368,8 +369,10 @@ namespace WebServices
                                       join maintype in ent_.ADVERTMAINTYPE on advert.ADVERTMAINTYPE equals maintype
                                       join subtype in ent_.ADVERTSUBTYPE on advert.ADVERTSUBTYPE equals subtype
                                       join user in ent_.APPUSER on advert.APPUSER equals user
+                                      where advert.ADVT_ISOPEN == true
                                       select new Advert
                                       {
+                                          IsOpen = advert.ADVT_ISOPEN,
                                           MainCategoryCode = maintype.ADTT_CODE,
                                           SubCategoryCode = subtype.ABST_CODE,
                                           Description = advert.ADVT_DESCRIPTION,
@@ -380,7 +383,7 @@ namespace WebServices
                                           ID = advert.ADVT_ID
                                       }).OrderByDescending(x => x.Datetime).Take(15).ToList();
 
-                    if (linqSelect!= null && linqSelect.Count > 0)
+                    if (linqSelect != null && linqSelect.Count > 0)
                     {
                         foreach (Advert advert_ in linqSelect.Take(15))
                         {
@@ -413,6 +416,47 @@ namespace WebServices
             return result_;
         }
 
+        [WebMethod]
+        public Result<bool> DoUpdateAdvertStatus(int AdvertID_, bool IsOpen)
+        {
+            Result<bool> result_ = new Result<bool>();
+
+            try
+            {
+                using (GRADUATIONEntities ent_ = new GRADUATIONEntities())
+                {
+                    using (TransactionScope scope_ = new TransactionScope())
+                    {
+                        ADVERT advertInfo_ = ent_.ADVERT.Where(x => x.ADVT_ID == (AdvertID_)).FirstOrDefault();
+                        if (advertInfo_ != null)
+                        {
+                            advertInfo_.ADVT_ISOPEN = IsOpen;
+
+                            ent_.SaveChanges();
+                            scope_.Complete();
+                            ent_.AcceptAllChanges();
+
+                            result_.Message = "İlan Bilgileri Güncellendi!";
+                            result_.Success = true;
+                        }
+                        else
+                        {
+                            result_.Message = "İlan Bilgileri Güncellenemedi!";
+                            result_.Success = false;
+                        }
+                    }
+                }
+            }
+            catch (Exception Ex_)
+            {
+                result_.Message = Ex_.GetBaseException().ToString();
+                result_.Success = false;
+            }
+
+            return result_;
+        }
+
+
         public bool isEmailValid(string eMail_)
         {
             string eMailPattern_ = @"^[A-Z0-9._%+-]+@[A-Z0-9.-]+.(com|org|net|edu|gov|mil|biz|info|mobi)(.[A-Z]{2})?$";
@@ -440,7 +484,7 @@ namespace WebServices
         {
             return VirtualPathUtility.ToAbsolute("~/");
             //return HttpContext.Current.Request.ApplicationPath;
-           
+
         }
     }
 }
