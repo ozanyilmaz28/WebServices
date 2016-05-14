@@ -475,16 +475,24 @@ namespace WebServices
         {
             Image_ = Image_.Replace(@"\n", "");
             byte[] productionImage_ = Convert.FromBase64String(Image_);
-            File.WriteAllBytes(VirtualPathUtility.ToAbsolute("~/" + AdvertID_ + ".png"), productionImage_);
-            return VirtualPathUtility.ToAbsolute("~/" + AdvertID_ + ".png");
+            File.WriteAllBytes(HttpContext.Current.Server.MapPath("" + AdvertID_ + ".png"), productionImage_);
+            return HttpContext.Current.Server.MapPath("" + AdvertID_ + ".png");
         }
 
         [WebMethod]
         public string serverPath()
         {
-            return VirtualPathUtility.ToAbsolute("~/");
-            //return HttpContext.Current.Request.ApplicationPath;
-
+            try
+            {
+                File.WriteAllText(HttpContext.Current.Server.MapPath("1.txt"), "Ozan");
+                return HttpContext.Current.Server.MapPath("");
+            }
+            catch (Exception ex)
+            {
+                return ex.ToString();
+            }
         }
+
+
     }
 }
