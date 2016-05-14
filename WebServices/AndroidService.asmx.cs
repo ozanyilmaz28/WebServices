@@ -269,11 +269,8 @@ namespace WebServices
                         {
                             if (!string.IsNullOrEmpty(advert_.SubCategoryCode) && !isNumeric(advert_.SubCategoryCode))
                                 advert_.MainCategoryCode += " - " + advert_.SubCategoryCode;
-                            if (File.Exists(VirtualPathUtility.ToAbsolute("~/" + advert_.ID + ".png")))
-                            {
-                                string path_ = VirtualPathUtility.ToAbsolute("~/" + advert_.ID + ".png");
-                                advert_.ImageLink = path_;
-                            }
+                            if (File.Exists(HttpContext.Current.Server.MapPath("" + advert_.ID + ".png")))
+                                advert_.ImageLink = "http://graduationprojectwebservice.azurewebsites.net/" + advert_.ID + ".png";
                             else
                                 advert_.ImageLink = "-";
                         }
@@ -329,11 +326,8 @@ namespace WebServices
                         {
                             if (!string.IsNullOrEmpty(advert_.SubCategoryCode) && !isNumeric(advert_.SubCategoryCode))
                                 advert_.MainCategoryCode += " - " + advert_.SubCategoryCode;
-                            if (File.Exists(VirtualPathUtility.ToAbsolute("~/" + advert_.ID + ".png")))
-                            {
-                                string path_ = VirtualPathUtility.ToAbsolute("~/" + advert_.ID + ".png");
-                                advert_.ImageLink = path_;
-                            }
+                            if (File.Exists(HttpContext.Current.Server.MapPath("" + advert_.ID + ".png")))
+                                advert_.ImageLink = "http://graduationprojectwebservice.azurewebsites.net/" + advert_.ID + ".png";
                             else
                                 advert_.ImageLink = "-";
                         }
@@ -389,11 +383,8 @@ namespace WebServices
                         {
                             if (!string.IsNullOrEmpty(advert_.SubCategoryCode) && !isNumeric(advert_.SubCategoryCode))
                                 advert_.MainCategoryCode += " - " + advert_.SubCategoryCode;
-                            if (File.Exists(VirtualPathUtility.ToAbsolute("~/" + advert_.ID + ".png")))
-                            {
-                                string path_ = VirtualPathUtility.ToAbsolute("~/" + advert_.ID + ".png");
-                                advert_.ImageLink = path_;
-                            }
+                            if (File.Exists(HttpContext.Current.Server.MapPath("" + advert_.ID + ".png")))
+                                advert_.ImageLink = "http://graduationprojectwebservice.azurewebsites.net/" + advert_.ID + ".png";
                             else
                                 advert_.ImageLink = "-";
                         }
