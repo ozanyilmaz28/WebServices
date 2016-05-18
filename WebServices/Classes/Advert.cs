@@ -25,6 +25,10 @@ namespace WebServices.Classes
 
         public string SubCategoryCode { get; set; }
 
+        public string MainCategoryCodeTR { get; set; }
+
+        public string SubCategoryCodeTR { get; set; }
+
         public bool? IsOpen { get; set; }
 
         public Advert()

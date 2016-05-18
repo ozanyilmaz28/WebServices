@@ -14,14 +14,13 @@ namespace WebServices
 {
 
     [WebService(Namespace = "http://graduationprojectwebservice.azurewebsites.net/")]
-    //[WebService(Namespace = "http://graduationprojectandroidservice.somee.com/")]
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
     [System.ComponentModel.ToolboxItem(false)]
 
     public class AndroidService : System.Web.Services.WebService
     {
         [WebMethod]
-        public Result<APPUSER> DoLoginAndReturnUserInfo(string UsernameOrMail_, string Password_)
+        public Result<APPUSER> DoLoginAndReturnUserInfo(string UsernameOrMail_, string Password_, bool TR)
         {
             Result<APPUSER> result_ = new Result<APPUSER>();
 
@@ -43,7 +42,10 @@ namespace WebServices
                     }
                     else
                     {
-                        result_.Message = "Girilen Kullanıcı Bilgileri Hatalı!";
+                        if (TR)
+                            result_.Message = "Girilen Kullanıcı Bilgileri Hatalı!";
+                        else
+                            result_.Message = "Wrong User Information!";
                         result_.Success = false;
                     }
                 }
@@ -58,7 +60,7 @@ namespace WebServices
         }
 
         [WebMethod]
-        public Result<APPUSER> DoInsertAndUpdateUser(bool IsNewUser_, string Username_, string NameSurname_, string Email_, string Phone_, string Password_)
+        public Result<APPUSER> DoInsertAndUpdateUser(bool IsNewUser_, string Username_, string NameSurname_, string Email_, string Phone_, string Password_, bool TR)
         {
             Result<APPUSER> result_ = new Result<APPUSER>();
 
@@ -84,7 +86,10 @@ namespace WebServices
                             ent_.AcceptAllChanges();
 
                             result_.Data = userInfo_;
-                            result_.Message = "Üyelik Kaydı Başarılı!";
+                            if (TR)
+                                result_.Message = "Üyelik Kaydı Başarılı!";
+                            else
+                                result_.Message = "Registration Successful!";
                             result_.Success = true;
                         }
                         else if (userInfo_ != null && !IsNewUser_)
@@ -98,17 +103,26 @@ namespace WebServices
                             ent_.AcceptAllChanges();
 
                             result_.Data = userInfo_;
-                            result_.Message = "Üyelik Bilgileri Güncellendi!";
+                            if (TR)
+                                result_.Message = "Üyelik Bilgileri Güncellendi!";
+                            else
+                                result_.Message = "User Informations Updated!";
                             result_.Success = true;
                         }
                         else if (userInfo_ == null && !IsNewUser_)
                         {
-                            result_.Message = "Girilen Bilgilerde Bir Kullanıcı Bulunamadı!";
+                            if (TR)
+                                result_.Message = "Girilen Bilgilerde Bir Kullanıcı Bulunamadı!";
+                            else
+                                result_.Message = "User Not Found!";
                             result_.Success = false;
                         }
                         else
                         {
-                            result_.Message = "Girilen Kullanıcı Adı ve ya Mail Adresi Sistemde Tanımlı!";
+                            if (TR)
+                                result_.Message = "Girilen Kullanıcı Adı ve ya Mail Adresi Sistemde Tanımlı!";
+                            else
+                                result_.Message = "This Username/Mail is Already Registered!";
                             result_.Success = false;
                         }
                     }
@@ -124,7 +138,7 @@ namespace WebServices
         }
 
         [WebMethod]
-        public Result<bool> DoInsertAndUpdateAdvert(int AdvertID_, long AdvertMainTypeID_, string AdvertSubTypeDescription_, string AdvertDescription_, long UserID_, string Phone_, string Mail_, string Image_, int Price_, bool TR_)
+        public Result<bool> DoInsertAndUpdateAdvert(int AdvertID_, long AdvertMainTypeID_, string AdvertSubTypeDescription_, string AdvertDescription_, long UserID_, string Phone_, string Mail_, string Image_, int Price_, bool TR)
         {
             Result<bool> result_ = new Result<bool>();
 
@@ -144,9 +158,9 @@ namespace WebServices
                                 subDesc_ = AdvertSubTypeDescription_;
 
                             advert_.ADVERTMAINTYPE = ent_.ADVERTMAINTYPE.Where(c => c.ADTT_ID == AdvertMainTypeID_).FirstOrDefault();
-                            if (TR_)
+                            if (TR)
                                 advert_.ADVERTSUBTYPE = ent_.ADVERTSUBTYPE.Where(c => c.ABST_DESCRIPTION.Equals(subDesc_)).FirstOrDefault();
-                            if (!TR_)
+                            if (!TR)
                                 advert_.ADVERTSUBTYPE = ent_.ADVERTSUBTYPE.Where(c => c.ABST_CODE.Equals(subDesc_)).FirstOrDefault();
                             if (UserID_ > 0)
                                 advert_.APPUSER = ent_.APPUSER.Where(c => c.USER_ID == UserID_).FirstOrDefault();
@@ -176,25 +190,6 @@ namespace WebServices
                                 result_.Message += "-----" + ex_.ToString();
                             }
                         }
-                        else
-                        {
-                            ADVERT advertInfo_ = ent_.ADVERT.Where(x => x.ADVT_ID == (AdvertID_)).FirstOrDefault();
-                            if (advertInfo_ != null)
-                            {
-
-                                ent_.SaveChanges();
-                                scope_.Complete();
-                                ent_.AcceptAllChanges();
-
-                                result_.Message = "İlan Bilgileri Güncellendi!";
-                                result_.Success = true;
-                            }
-                            else
-                            {
-                                result_.Message = "İlan Bilgileri Güncellenemedi!";
-                                result_.Success = false;
-                            }
-                        }
                     }
                 }
             }
@@ -208,35 +203,7 @@ namespace WebServices
         }
 
         [WebMethod]
-        public Result<List<APPUSER>> GetUserList()
-        {
-            Result<List<APPUSER>> result_ = new Result<List<APPUSER>>();
-
-            try
-            {
-                using (GRADUATIONEntities ent_ = new GRADUATIONEntities())
-                {
-                    result_.Data = ent_.APPUSER.ToList();
-                    if (result_.Data.Count > 0)
-                        result_.Success = true;
-                    else
-                    {
-                        result_.Message = "Kullanıcı Bulunamadı!";
-                        result_.Success = false;
-                    }
-                }
-            }
-            catch (Exception Ex_)
-            {
-                result_.Message = Ex_.GetBaseException().ToString();
-                result_.Success = false;
-            }
-
-            return result_;
-        }
-
-        [WebMethod]
-        public Result<List<Advert>> GetUserAdvertList(long UserID_)
+        public Result<List<Advert>> GetUserAdvertList(long UserID_, bool TR)
         {
             Result<List<Advert>> result_ = new Result<List<Advert>>();
 
@@ -294,7 +261,7 @@ namespace WebServices
         }
 
         [WebMethod]
-        public Result<List<Advert>> GetAdvertList(long AdvertMainTypeID_)
+        public Result<List<Advert>> GetAdvertList(long AdvertMainTypeID_, bool TR)
         {
             Result<List<Advert>> result_ = new Result<List<Advert>>();
 
@@ -336,7 +303,10 @@ namespace WebServices
                     }
                     else
                     {
-                        result_.Message = "İlan Bulunamadı!";
+                        if (TR)
+                            result_.Message = "İlan Bulunamadı!";
+                        else
+                            result_.Message = "There Is No Advert!";
                         result_.Success = false;
                     }
                 }
@@ -351,7 +321,7 @@ namespace WebServices
         }
 
         [WebMethod]
-        public Result<List<Advert>> GetTop15AdvertList()
+        public Result<List<Advert>> GetTop15AdvertList(bool TR)
         {
             Result<List<Advert>> result_ = new Result<List<Advert>>();
 
@@ -393,7 +363,10 @@ namespace WebServices
                     }
                     else
                     {
-                        result_.Message = "İlan Bulunamadı!";
+                        if (TR)
+                            result_.Message = "İlan Bulunamadı!";
+                        else
+                            result_.Message = "There Is No Advert!";
                         result_.Success = false;
                     }
                 }
@@ -408,7 +381,7 @@ namespace WebServices
         }
 
         [WebMethod]
-        public Result<bool> DoUpdateAdvertStatus(int AdvertID_, bool IsOpen)
+        public Result<bool> DoUpdateAdvertStatus(int AdvertID_, bool IsOpen,bool TR)
         {
             Result<bool> result_ = new Result<bool>();
 
@@ -426,13 +399,15 @@ namespace WebServices
                             ent_.SaveChanges();
                             scope_.Complete();
                             ent_.AcceptAllChanges();
-
-                            result_.Message = "İlan Bilgileri Güncellendi!";
+                            if (TR)
+                                result_.Message = "İlan Bilgileri Güncellendi!";
+                            else
+                                result_.Message = "Advert Is Updated!";
                             result_.Success = true;
                         }
                         else
                         {
-                            result_.Message = "İlan Bilgileri Güncellenemedi!";
+                            result_.Message = "Advert Couldn't Updated!";
                             result_.Success = false;
                         }
                     }
@@ -446,7 +421,6 @@ namespace WebServices
 
             return result_;
         }
-
 
         public bool isEmailValid(string eMail_)
         {
